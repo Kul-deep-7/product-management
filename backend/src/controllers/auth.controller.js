@@ -31,3 +31,27 @@ const sendOTP = asyncHandler(async(req, res)=>{
         new ApiResponse(200, "OTP sent successfully")
     )
 })
+
+const verifyPTP = asyncHandler(async (req,res)=>{
+    const { email, mobile, otp } = req.body;
+
+    const user = await User.findOne({ $or: [{ email }, { mobile }] });
+
+    if (!user) {
+        throw new ApiError(400, "User not found")
+    }
+
+    if (user.otp !== otp) {
+        throw new ApiError(400, "Invalid OTP")
+    }
+
+    if (user.otpExpiry < Date.now()) {
+        throw new ApiError(400, "OTP expired")
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, "OTP verified successfully")
+    )
+})
+
+export { sendOTP }
