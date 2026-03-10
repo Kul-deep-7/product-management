@@ -5,10 +5,12 @@ const userschema = new mongoose.Schema({
         type: String,
         lowercase: true,
         trim: true,
+        sparse: true
     },
     mobile:{
         type: String, 
         trim: true,
+        sparse: true
     },
     otp:{
         type: String,
