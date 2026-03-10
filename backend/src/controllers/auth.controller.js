@@ -16,6 +16,7 @@ const sendOTP = asyncHandler(async(req, res)=>{
     //     $or: [{email}, {mobile}]
     // }) had issue when only 1 field was provided and other was not as the other stayed null so it was always finding the user by null value and not creating new user
     //same issue in verify otp controller
+    
     //Eg for better understanding:
                             // Does ANY condition match?
         // email: "newuser@example.com" === "old@example.com"? .. doesnt match
