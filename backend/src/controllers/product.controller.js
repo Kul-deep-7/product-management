@@ -65,4 +65,83 @@ const getAllProducts = asyncHandler(async(req,res)=>{
     )
 })
 
+
+const updateProduct = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const {
+        productName,
+        productType,
+        quantityStock,
+        mrp,
+        sellingPrice,
+        brandName,
+        exchangeEligibility,
+    } = req.body;
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+        throw new ApiError(404, "Product not found");
+    }
+
+    if (productName) product.productName = productName;
+    if (productType) product.productType = productType;
+    if (quantityStock !== undefined) product.quantityStock = quantityStock;
+    if (mrp) product.mrp = mrp;
+    if (sellingPrice) product.sellingPrice = sellingPrice;
+    if (brandName) product.brandName = brandName;
+    if (exchangeEligibility) product.exchangeEligibility = exchangeEligibility;
+
+    const imagePath = req.files?.images?.[0]?.path;
+    if (imagePath) {
+        const cloudImage = await uploadOnCloudinary(imagePath);
+        if (cloudImage) {
+            product.images = [cloudImage.url];
+        }
+    }
+
+    await product.save();
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, product, "Product updated successfully"));
+});
+
+const deleteProduct = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    const product = await Product.findByIdAndDelete(id);
+
+    if (!product) {
+        throw new ApiError(404, "Product not found");
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, {}, "Product deleted successfully"));
+});
+
+const togglePublish = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+        throw new ApiError(404, "Product not found");
+    }
+
+    product.published = !product.published;
+    await product.save();
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                product,
+                `Product ${product.published ? "published" : "unpublished"} successfully`
+            )
+        );
+});
+
 export { createProduct, getAllProducts }
