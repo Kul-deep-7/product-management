@@ -32,7 +32,7 @@ const sendOTP = asyncHandler(async(req, res)=>{
     )
 })
 
-const verifyPTP = asyncHandler(async (req,res)=>{
+const verifyOTP = asyncHandler(async (req,res)=>{
     const { email, mobile, otp } = req.body;
 
     const user = await User.findOne({ $or: [{ email }, { mobile }] });
@@ -54,4 +54,4 @@ const verifyPTP = asyncHandler(async (req,res)=>{
     )
 })
 
-export { sendOTP }
+export { sendOTP , verifyOTP}
