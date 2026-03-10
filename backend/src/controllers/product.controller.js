@@ -144,4 +144,9 @@ const togglePublish = asyncHandler(async (req, res) => {
         );
 });
 
-export { createProduct, getAllProducts }
+export { createProduct, 
+        getAllProducts,
+        updateProduct,
+        deleteProduct,
+        togglePublish
+    }
