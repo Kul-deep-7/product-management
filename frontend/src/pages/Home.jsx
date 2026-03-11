@@ -29,24 +29,21 @@ const Home = () => {
                     <img src="https://res.cloudinary.com/dlmbyyh5z/image/upload/v1773236210/Home_ef6faj.png" /> <span>Home</span>
                 </div>
                 <div
-                    onClick={() => navigate("/products")}
+                    onClick={() => navigate("/products/add")}
                     className="flex items-center gap-3 px-3 py-2 rounded-md text-gray-400 text-sm cursor-pointer hover:bg-[#2a2a3e] hover:text-white"
                 >
                     <img src="https://res.cloudinary.com/dlmbyyh5z/image/upload/v1773236210/Shopping-bag_bqiiip.png"/> <span>Products</span>
                 </div>
             </div>
 
-            {/* Main Content */}
             <div className="flex-1 flex flex-col">
 
-                {/* Top Bar */}
                 <div className="flex items-center justify-end px-6 py-4 border-b border-gray-100">
                     <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-semibold cursor-pointer">
                         👤
                     </div>
                 </div>
 
-                {/* Tabs */}
                 <div className="flex gap-6 px-8 pt-4 border-b border-gray-100">
                     <button
                         onClick={() => setActiveTab("published")}
