@@ -2,12 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const Login = () => {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const navigate = useNavigate();
 
     const isEmail = (val) => val.includes("@");
 
@@ -18,16 +19,38 @@ const Login = () => {
         }
         setError("");
         setLoading(true);
+
+        const isEmailInput = isEmail(input);
         try {
         const payload = isEmail(input)
             ? { email: input.trim() }
             : { mobile: input.trim() };
 
-        await axios.post(`${API_URL}/sendotp`, payload, {
+        const res = await axios.post(`${API_URL}/sendotp`, payload, {
             withCredentials: true,
         });
 
+            //console.log("res:", res);
+            //console.log("res.data:", res.data);
+            console.log("OTP:", res.data.data);
+            alert(`OTP: ${res.data.data.otp} 
+                    
+                
+                    PLEASE CLICK OK TO CONTINUE
+                `);
+            
+
+        navigate("/otp", {
+                state: isEmailInput
+                    ? { email: input.trim() }
+                    : { mobile: input.trim() },
+        });
+
         } catch (err) {
+            console.log("Full error:", err);
+            console.log("Response:", err.response);
+            console.log("Status:", err.response?.status);
+            console.log("Message:", err.response?.data);
         setError(err.response?.data?.message || "Something went wrong");
         } finally {
         setLoading(false);

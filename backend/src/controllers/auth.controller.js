@@ -55,7 +55,7 @@ const sendOTP = asyncHandler(async(req, res)=>{
     return res
     .status(200)
     .json(
-        new ApiResponse(200, {}, "OTP sent successfully")
+        new ApiResponse(200, {otp}, "OTP sent successfully")
     )
 })
 
@@ -100,7 +100,7 @@ const verifyOTP = asyncHandler(async (req,res)=>{
     .status(200)
     .cookie("token", token, cookieOptions)
     .json(
-        new ApiResponse(200, {}, "OTP verified successfully")
+        new ApiResponse(200, user, "OTP verified successfully")
     )
 })
 
