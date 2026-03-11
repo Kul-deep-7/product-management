@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import  Product  from "../models/product.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
+
 const createProduct = asyncHandler(async (req, res) => {
     const {
         productName,

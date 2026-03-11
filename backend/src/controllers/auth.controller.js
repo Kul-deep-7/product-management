@@ -2,6 +2,12 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { User } from "../models/user.model.js"
+import jwt from "jsonwebtoken"
+
+const cookieOptions = {
+    httpOnly: true,
+    secure: true,
+};
 
 const sendOTP = asyncHandler(async(req, res)=>{
     const { email, mobile} = req.body;
@@ -46,8 +52,10 @@ const sendOTP = asyncHandler(async(req, res)=>{
 
     console.log("Generated OTP:", otp);
 
-    return res.status(200).json(
-        new ApiResponse(200, "OTP sent successfully")
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, {}, "OTP sent successfully")
     )
 })
 
@@ -78,9 +86,33 @@ const verifyOTP = asyncHandler(async (req,res)=>{
 
     await user.save();
 
-    return res.status(200).json(
-        new ApiResponse(200, "OTP verified successfully")
+    const token = jwt.sign(
+        { 
+            _id: user._id 
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        { 
+            expiresIn: "1d" 
+        }
+    );
+
+    return res
+    .status(200)
+    .cookie("token", token, cookieOptions)
+    .json(
+        new ApiResponse(200, {}, "OTP verified successfully")
     )
 })
 
-export { sendOTP , verifyOTP}
+
+const logout = asyncHandler(async (req, res) => {
+    return res
+        .status(200)
+        .clearCookie("token", {
+            httpOnly: true,
+            secure: true
+        })
+        .json(new ApiResponse(200, {}, "Logged out successfully"));
+});
+
+export { sendOTP , verifyOTP, logout}
