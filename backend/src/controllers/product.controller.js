@@ -21,19 +21,22 @@ const createProduct = asyncHandler(async (req, res) => {
         throw new ApiError(400, "All required fields must be provided");
     }
 
-    const images = req.files?.images[0]?.path;
+    const images = req.files?.images;
 
     if(!images){
         throw new ApiError(400, "Image is required")
     }
 
-    console.log("Local path:" , images);
+    //console.log("Total images received:", images.length);
+    //console.log("Local path:" , images);
 
-    const cloudImage= await uploadOnCloudinary(images)
-
-    if(!cloudImage){
-        throw new ApiError(500, "could not uplaod image on cloudinary")
-    }
+    const uploadedImages= await Promise.all(
+    images.map(async (file) => {
+        const cloudImage = await uploadOnCloudinary(file.path); // ✅ still .path
+        if (!cloudImage) throw new ApiError(500, "Could not upload image");
+        return cloudImage.url;
+    })
+);
 
     const product = await Product.create({
         productName,
@@ -41,7 +44,7 @@ const createProduct = asyncHandler(async (req, res) => {
         quantityStock,
         mrp,
         sellingPrice,
-        images: [cloudImage.url],
+        images: uploadedImages,
         brandName,
         exchangeEligibility,
     })
@@ -93,14 +96,17 @@ const updateProduct = asyncHandler(async (req, res) => {
     if (brandName) product.brandName = brandName;
     if (exchangeEligibility) product.exchangeEligibility = exchangeEligibility;
 
-    const imagePath = req.files?.images?.[0]?.path;
-    if (imagePath) {
-        const cloudImage = await uploadOnCloudinary(imagePath);
-        if (cloudImage) {
-            product.images = [cloudImage.url];
-        }
+    const imageFiles = req.files?.images;
+    if (imageFiles && imageFiles.length > 0) {
+        const uploadedImages = await Promise.all(
+            imageFiles.map(async (file) => {
+                const cloudImage = await uploadOnCloudinary(file.path);
+                if (!cloudImage) throw new ApiError(500, "Could not upload image");
+                return cloudImage.url;
+            })
+        );
+        product.images = uploadedImages;
     }
-
     await product.save();
 
     return res

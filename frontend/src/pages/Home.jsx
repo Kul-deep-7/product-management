@@ -1,9 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 
 const Home = () => {
     const [activeTab, setActiveTab] = useState("published");
+    const [products, setProducts] = useState([]);
+
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const res = await axios.get(`${API_URL}/products`, {
+                    withCredentials: true,
+                });
+                setProducts(res.data.data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        fetchProducts();
+    }, []);
+
+    const filteredProducts = products.filter((p) =>
+        activeTab === "published" ? p.published : !p.published
+    );
 
     return (
         <div className="flex h-screen w-full bg-white">
@@ -29,7 +53,7 @@ const Home = () => {
                     <img src="https://res.cloudinary.com/dlmbyyh5z/image/upload/v1773236210/Home_ef6faj.png" /> <span>Home</span>
                 </div>
                 <div
-                    onClick={() => navigate("/products/add")}
+                    onClick={() => navigate("/products")}
                     className="flex items-center gap-3 px-3 py-2 rounded-md text-gray-400 text-sm cursor-pointer hover:bg-[#2a2a3e] hover:text-white"
                 >
                     <img src="https://res.cloudinary.com/dlmbyyh5z/image/upload/v1773236210/Shopping-bag_bqiiip.png"/> <span>Products</span>
@@ -67,21 +91,38 @@ const Home = () => {
                     </button>
                 </div>
 
-                {/* Empty State */}
                 <div className="flex-1 flex flex-col items-center justify-center gap-3">
-                    <div className="text-4xl text-blue-700">
-                        <img src="https://res.cloudinary.com/dlmbyyh5z/image/upload/v1773235967/iconoir_grid-add_nah4ml.png" />
-                    </div>
-                    <p className="text-sm font-semibold text-gray-800">
-                        {activeTab === "published" ? "No Published Products" : "No Unpublished Products"}
-                    </p>
-                    <p className="text-xs text-gray-400 text-center">
-                        {activeTab === "published"
-                            ? ( <>Your Published Products will appear here 
-                            <br /> Create your first product to publish
-                            </> ) : (
-                             "Your Unpublished Products will appear here")}
-                    </p>
+                    {filteredProducts.length === 0 ? (
+                        <>
+                            <img src="https://res.cloudinary.com/dlmbyyh5z/image/upload/v1773235967/iconoir_grid-add_nah4ml.png" />
+                            <p className="text-sm font-semibold text-gray-800">
+                                {activeTab === "published" ? "No Published Products" : "No Unpublished Products"}
+                            </p>
+                            <p className="text-xs text-gray-400 text-center">
+                                {activeTab === "published"
+                                    ? (<>Your Published Products will appear here<br />Create your first product to publish</>)
+                                    : "Your Unpublished Products will appear here"}
+                            </p>
+                        </>
+                    ) : (
+                        <div className="grid grid-cols-3 gap-6 w-full px-8 py-6">
+                            {filteredProducts.map((product) => (
+                                <div key={product._id} className="border border-gray-200 rounded-xl overflow-hidden">
+                                    <div className="bg-gray-50 h-40 flex items-center justify-center">
+                                        {product.images?.length > 0 ? (
+                                            <img src={product.images[0]} className="h-full w-full object-contain p-4" />
+                                        ) : (
+                                            <div className="text-gray-300 text-4xl">📦</div>
+                                        )}
+                                    </div>
+                                    <div className="px-4 py-3">
+                                        <p className="text-sm font-semibold text-gray-900">{product.productName}</p>
+                                        <p className="text-xs text-gray-400 mt-1">{product.productType} • ₹{product.sellingPrice}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
             </div>

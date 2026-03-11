@@ -84,6 +84,7 @@ const Products = () => {
             });
             setImageFile(null);
             setImagePreview(null);
+            navigate("/products")
 
         } catch (err) {
             setError(err.response?.data?.message || "Something went wrong");
