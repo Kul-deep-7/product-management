@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ProductForm from "./ProductForm";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL =  "https://product-management-t4f6.onrender.com";
 
 const Products = () => {
     const navigate = useNavigate();
