@@ -44,7 +44,7 @@ const createProduct = asyncHandler(async (req, res) => {
         quantityStock,
         mrp,
         sellingPrice,
-        images: uploadedImages.secure_url,
+        images: uploadedImages,
         brandName,
         exchangeEligibility,
         owner: req.user._id
@@ -106,7 +106,7 @@ const updateProduct = asyncHandler(async (req, res) => {
                 return cloudImage.url;
             })
         );
-        product.images = uploadedImages.secure_url;
+        product.images = uploadedImages;
     }
     await product.save();
 
