@@ -30,6 +30,6 @@ router.route("/product/delete/:id").delete(isLoggedIn,deleteProduct)
 router.route("/product/togglepublish/:id").patch(isLoggedIn,togglePublish)
 
 //router.route("/logout").post(isLoggedIn, logout)
-router.route("/getMe").post(isLoggedIn, getMe)
+router.route("/getMe").get(isLoggedIn, getMe)
 
 export default router;
