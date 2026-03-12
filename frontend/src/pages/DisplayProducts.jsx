@@ -162,13 +162,14 @@ const DisplayProducts = () => {
                 <div className="flex items-center px-8 py-4 border-b border-gray-100">
     
                     <div className="flex items-center gap-4 ml-auto">
-
+                        {products.length > 0 && (
                         <button
                             onClick={() => { setShowAddModal(true); setError(""); }}
                             className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-blue-700"
                         >
                             + Add Products
                         </button>
+                        )}
 
                     </div>
 
