@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken"
 const cookieOptions = {
     httpOnly: true,
     secure: true,
+    sameSite: "none"
 };
 
 const sendOTP = asyncHandler(async(req, res)=>{
