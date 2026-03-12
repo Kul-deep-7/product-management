@@ -140,33 +140,40 @@ const DisplayProducts = () => {
             <div className="flex-1 flex flex-col overflow-hidden">
 
                 {/* Top Bar */}
-                    {products.length > 0 && (
-                        <div className="flex items-center px-8 py-4 border-b border-gray-100">
-                            <div className="flex items-center gap-4 ml-auto">
+                <div className="flex items-center justify-between px-8 py-4 border-b border-gray-100">
+                    <h1 className="text-base font-semibold text-gray-900">Products</h1>
+                    <div className="flex items-center gap-4">
+                        <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm cursor-pointer">👤</div>
+                    </div>
+                </div>
 
-                                <div className="flex items-center gap-2 border border-gray-200 rounded-md px-3 py-1.5">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2">
-                                        <circle cx="11" cy="11" r="8"/>
-                                        <path d="m21 21-4.35-4.35"/>
-                                    </svg>
+                <div className="flex items-center px-8 py-4 border-b border-gray-100">
+    
+                    <div className="flex items-center gap-4 ml-auto">
+                        
+                        <div className="flex items-center gap-2 border border-gray-200 rounded-md px-3 py-1.5">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="m21 21-4.35-4.35"/>
+                            </svg>
 
-                                    <input
-                                        type="text"
-                                        placeholder="Search Services, Products"
-                                        className="text-xs outline-none text-gray-500 w-40"
-                                    />
-                                </div>
-
-                                <button
-                                    onClick={() => { setShowAddModal(true); setError(""); }}
-                                    className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-blue-700"
-                                >
-                                    + Add Products
-                                </button>
-
-                            </div>
+                            <input
+                                type="text"
+                                placeholder="Search Services, Products"
+                                className="text-xs outline-none text-gray-500 w-40"
+                            />
                         </div>
-                    )}
+
+                        <button
+                            onClick={() => { setShowAddModal(true); setError(""); }}
+                            className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-blue-700"
+                        >
+                            + Add Products
+                        </button>
+
+                    </div>
+
+                </div>
 
                 {/* display product content */}
                 <div className="flex-1 overflow-y-auto px-8 py-6">
