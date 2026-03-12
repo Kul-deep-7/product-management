@@ -7,11 +7,11 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [authLoading, setAuthLoading] = useState(true); // ✅ true until /getme resolves
+    const [authLoading, setAuthLoading] = useState(true); 
 
     const fetchUser = async () => {
         try {
-            const res = await axios.get(`${API_URL}/getme`, { withCredentials: true });
+            const res = await axios.get(`${API_URL}/getMe`, { withCredentials: true });
             setUser(res.data.data);
         } catch (err) {
             setUser(null);
