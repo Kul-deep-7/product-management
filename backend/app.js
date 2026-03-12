@@ -7,8 +7,8 @@ import cookieParser from "cookie-parser";
 const app = express()
 
 app.use(cors({
-    credentials: true,
-    origin: "https://product-management-frontend-78ef.onrender.com"
+    origin: "https://product-management-frontend-78ef.onrender.com",
+    credentials: true
 }
 ))
 app.use(express.json())
