@@ -8,7 +8,7 @@ const app = express()
 
 app.use(cors({
     credentials: true,
-    origin: "http://localhost:5173"
+    origin: "https://product-management-frontend-78ef.onrender.com"
 }
 ))
 app.use(express.json())
