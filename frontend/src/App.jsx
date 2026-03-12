@@ -4,7 +4,7 @@ import Otp from "./login/Otp";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import DisplayProducts from "./pages/DisplayProducts";
-
+import ProtectedRoute from "./context/ProtectedRoute";
 
 
 const App = () => {
@@ -12,9 +12,10 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/otp" element={<Otp />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/products" element={<DisplayProducts />} />
-      <Route path="/products/add" element={<Products />} />
+      <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+       
+      <Route path="/products" element={<ProtectedRoute><DisplayProducts /></ProtectedRoute>} />
+      <Route path="/products/add" element={<ProtectedRoute><Products /></ProtectedRoute>} />
     </Routes>
   );
 };

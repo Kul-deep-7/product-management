@@ -47,6 +47,7 @@ const createProduct = asyncHandler(async (req, res) => {
         images: uploadedImages,
         brandName,
         exchangeEligibility,
+        owner: req.user._id
     })
 
     return res
@@ -56,7 +57,7 @@ const createProduct = asyncHandler(async (req, res) => {
 
 
 const getAllProducts = asyncHandler(async(req,res)=>{
-    const products = await Product.find({})
+    const products = await Product.find({owner : req.user._id})
 
     if(!products){
         throw new ApiError(404, "No producrs")

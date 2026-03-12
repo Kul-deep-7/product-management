@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -13,13 +14,13 @@ const EnterOTP = () => {
     const inputRefs = useRef([]);
     const navigate = useNavigate();
     const location = useLocation();
+    const { user, authLoading, setUser } = useAuth();
 
     const { email, mobile } = location.state || {};
 
-    // If someone lands here directly without going through login, send them back
     useEffect(() => {
         if (!email && !mobile) {
-            navigate("/login", { replace: true });
+            navigate("/", { replace: true });
         }
     }, []);
 
@@ -28,6 +29,10 @@ const EnterOTP = () => {
         const interval = setInterval(() => setTimer((t) => t - 1), 1000);
         return () => clearInterval(interval);
     }, [timer]);
+
+    // ✅ already logged in → redirect to home
+    if (authLoading) return null;
+    if (user) return <Navigate to="/home" replace />;
 
     const handleChange = (index, value) => {
         if (!/^\d*$/.test(value)) return;
@@ -61,6 +66,7 @@ const EnterOTP = () => {
             const res = await axios.post(`${API_URL}/verifyotp`, payload, {
                 withCredentials: true,
             });
+            setUser(res.data.data); // ✅ update context immediately
             navigate("/home");
         } catch (err) {
             setError(err.response?.data?.message || "Invalid OTP");
@@ -77,11 +83,7 @@ const EnterOTP = () => {
             const payload = email ? { email } : { mobile };
             const res = await axios.post(`${API_URL}/sendotp`, payload, { withCredentials: true });
             console.log("Resend OTP:", res.data.data.otp);
-            alert(`New OTP: ${res.data.data.otp}
-
-            
-                    PLEASE CLICK OK TO CONTINUE
-                `);
+            alert(`New OTP: ${res.data.data.otp}\n\nPLEASE CLICK OK TO CONTINUE`);
             setTimer(20);
             setCanResend(false);
             setOtp(["", "", "", "", "", ""]);
@@ -94,7 +96,6 @@ const EnterOTP = () => {
 
     return (
         <div className="flex h-screen w-full overflow-hidden">
-
             <div className="flex items-center justify-start">
                 <div className="w-[40vw] h-screen rounded-3xl flex flex-col justify-end">
                     <img
@@ -106,7 +107,6 @@ const EnterOTP = () => {
 
             <div className="w-1/2 flex flex-col items-center justify-center bg-white px-16">
                 <div className="w-full max-w-sm flex flex-col h-full py-16">
-
                     <div className="flex-1 flex flex-col justify-center">
                         <h1 className="text-2xl font-bold text-gray-900 mb-8 text-center">
                             Login to your Productr Account
@@ -131,9 +131,7 @@ const EnterOTP = () => {
                                     />
                                 ))}
                             </div>
-                            {error && (
-                                <p className="text-red-500 text-xs mt-2">{error}</p>
-                            )}
+                            {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
                         </div>
 
                         <button
@@ -160,7 +158,6 @@ const EnterOTP = () => {
                         <p className="text-xs text-gray-400">Don't have a Productr Account</p>
                         <p className="text-black cursor-pointer">SignUp Here</p>
                     </div>
-
                 </div>
             </div>
         </div>

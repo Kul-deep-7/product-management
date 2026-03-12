@@ -1,5 +1,5 @@
 import {Router} from "express";
-import { sendOTP, verifyOTP, logout } from "../controllers/auth.controller.js";
+import { sendOTP, verifyOTP, getMe } from "../controllers/auth.controller.js";
 import { createProduct, getAllProducts, updateProduct, deleteProduct, togglePublish } from "../controllers/product.controller.js";
 import { upload } from "../middleware/multer.middleware.js";
 import { isLoggedIn } from "../middleware/auth.middleware.js";
@@ -29,6 +29,7 @@ router.route("/product/update/:id").put(isLoggedIn,
 router.route("/product/delete/:id").delete(isLoggedIn,deleteProduct)
 router.route("/product/togglepublish/:id").patch(isLoggedIn,togglePublish)
 
-router.route("/logout").post(isLoggedIn, logout)
+//router.route("/logout").post(isLoggedIn, logout)
+router.route("/getMe").post(isLoggedIn, getMe)
 
 export default router;
