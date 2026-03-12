@@ -6,7 +6,7 @@ const ProductCard = ({ product, onDelete, onTogglePublish, onEdit }) => {
     return (
         <div className="border border-gray-200 rounded-xl overflow-hidden">
 
-            {/* Image */}
+            
             <div className="bg-gray-50 h-48 relative overflow-hidden">
                 {product.images?.length > 0 ? (
                     <>
@@ -24,7 +24,7 @@ const ProductCard = ({ product, onDelete, onTogglePublish, onEdit }) => {
                 )}
             </div>
 
-            {/* Info */}
+            
             <div className="px-4 py-3 flex flex-col gap-1">
                 <p className="text-sm font-semibold text-gray-900 mb-1">{product.productName}</p>
                 <div className="flex justify-between text-xs text-gray-400">
@@ -56,7 +56,7 @@ const ProductCard = ({ product, onDelete, onTogglePublish, onEdit }) => {
                     <span className="text-gray-600 uppercase">{product.exchangeEligibility}</span>
                 </div>
 
-                {/* Buttons */}
+               
                 <div className="flex items-center gap-2 mt-3">
                     <button
                         onClick={() => onTogglePublish(product._id)}
@@ -82,7 +82,7 @@ const ProductCard = ({ product, onDelete, onTogglePublish, onEdit }) => {
                 </div>
             </div>
 
-            {/* Delete Confirmation Modal */}
+{/* confirmation delete box */}
             {showDeleteModal && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                     <div className="bg-white rounded-xl w-full max-w-sm mx-4 p-6">

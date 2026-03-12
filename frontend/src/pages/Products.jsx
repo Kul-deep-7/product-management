@@ -42,7 +42,7 @@ const Products = () => {
     return (
         <div className="flex h-screen w-full bg-white">
 
-            {/* Sidebar */}
+            
             <div className="w-52 bg-[#1a1a2e] flex flex-col py-6 px-4 gap-2 shrink-0">
                 <div className="flex items-center gap-2 mb-8 px-2">
                     <img src="https://res.cloudinary.com/dlmbyyh5z/image/upload/v1773235724/Frame_4_1_rnmtzo.png" />
@@ -60,10 +60,10 @@ const Products = () => {
                 </div>
             </div>
 
-            {/* Main */}
+          
             <div className="flex-1 flex flex-col overflow-hidden">
 
-                {/* Top Bar */}
+          
                 <div className="flex items-center justify-between px-8 py-4 border-b border-gray-100">
                     <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/products")}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2">
@@ -74,7 +74,7 @@ const Products = () => {
                     <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm cursor-pointer">👤</div>
                 </div>
 
-                {/* Form */}
+               
                 <div className="flex-1 overflow-y-auto px-8 py-6 max-w-lg">
                     <ProductForm
                         onSubmit={handleCreate}

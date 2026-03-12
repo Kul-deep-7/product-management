@@ -119,7 +119,7 @@ const DisplayProducts = () => {
     return (
         <div className="flex h-screen w-full bg-white">
 
-            {/* Sidebar */}
+            {/* Sidebar home & product page */}
             <div className="w-52 bg-[#1a1a2e] flex flex-col py-6 px-4 gap-2 shrink-0">
                 <div className="flex items-center gap-2 mb-8 px-2">
                     <img src="https://res.cloudinary.com/dlmbyyh5z/image/upload/v1773235724/Frame_4_1_rnmtzo.png" />
@@ -143,20 +143,39 @@ const DisplayProducts = () => {
                 <div className="flex items-center justify-between px-8 py-4 border-b border-gray-100">
                     <h1 className="text-base font-semibold text-gray-900">Products</h1>
                     <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2 border border-gray-200 rounded-md px-3 py-1.5">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2">
-                                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                            </svg>
-                            <input type="text" placeholder="Search Services, Products" className="text-xs outline-none text-gray-500 w-40" />
-                        </div>
-                        <button onClick={() => { setShowAddModal(true); setError(""); }} className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-blue-700">
-                            + Add Products
-                        </button>
                         <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm cursor-pointer">👤</div>
                     </div>
                 </div>
 
-                {/* Products Grid */}
+                <div className="flex items-center px-8 py-4 border-b border-gray-100">
+    
+                    <div className="flex items-center gap-4 ml-auto">
+                        
+                        <div className="flex items-center gap-2 border border-gray-200 rounded-md px-3 py-1.5">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="m21 21-4.35-4.35"/>
+                            </svg>
+
+                            <input
+                                type="text"
+                                placeholder="Search Services, Products"
+                                className="text-xs outline-none text-gray-500 w-40"
+                            />
+                        </div>
+
+                        <button
+                            onClick={() => { setShowAddModal(true); setError(""); }}
+                            className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-blue-700"
+                        >
+                            + Add Products
+                        </button>
+
+                    </div>
+
+                </div>
+
+                {/* display product content */}
                 <div className="flex-1 overflow-y-auto px-8 py-6">
                     {loading ? (
                         <div className="flex items-center justify-center h-full">
@@ -194,7 +213,7 @@ const DisplayProducts = () => {
                 </div>
             </div>
 
-            {/* Add Modal */}
+            {/* Add product modal*/}
             {showAddModal && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                     <div className="bg-white rounded-xl w-full max-w-md mx-4 p-6 relative max-h-[90vh] overflow-y-auto">
@@ -212,7 +231,7 @@ const DisplayProducts = () => {
                 </div>
             )}
 
-            {/* Edit Modal */}
+            {/* Edit product modal */}
             {showEditModal && selectedProduct && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                     <div className="bg-white rounded-xl w-full max-w-md mx-4 p-6 relative max-h-[90vh] overflow-y-auto">
@@ -231,7 +250,7 @@ const DisplayProducts = () => {
                 </div>
             )}
 
-            {/* Toast */}
+            {/* error or succession toast */}
             {toast && (
                 <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-white border border-gray-200 rounded-lg px-4 py-2 flex items-center gap-2 shadow-md">
                     <div className="w-5 h-5 bg-green-500 rounded flex items-center justify-center">
