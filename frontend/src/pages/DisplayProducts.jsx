@@ -143,14 +143,6 @@ const DisplayProducts = () => {
                 <div className="flex items-center justify-between px-8 py-4 border-b border-gray-100">
                     <h1 className="text-base font-semibold text-gray-900">Products</h1>
                     <div className="flex items-center gap-4">
-                        <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm cursor-pointer">👤</div>
-                    </div>
-                </div>
-
-                <div className="flex items-center px-8 py-4 border-b border-gray-100">
-    
-                    <div className="flex items-center gap-4 ml-auto">
-                        
                         <div className="flex items-center gap-2 border border-gray-200 rounded-md px-3 py-1.5">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2">
                                 <circle cx="11" cy="11" r="8"/>
@@ -163,6 +155,13 @@ const DisplayProducts = () => {
                                 className="text-xs outline-none text-gray-500 w-40"
                             />
                         </div>
+                        <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm cursor-pointer">👤</div>
+                    </div>
+                </div>
+
+                <div className="flex items-center px-8 py-4 border-b border-gray-100">
+    
+                    <div className="flex items-center gap-4 ml-auto">
 
                         <button
                             onClick={() => { setShowAddModal(true); setError(""); }}
