@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-const ProductCard = ({ product, onDelete, onTogglePublish }) => {
-    const navigate = useNavigate();
+const ProductCard = ({ product, onDelete, onTogglePublish, onEdit }) => {
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     return (
         <div className="border border-gray-200 rounded-xl overflow-hidden">
@@ -67,13 +66,13 @@ const ProductCard = ({ product, onDelete, onTogglePublish }) => {
                         {product.published ? "Unpublish" : "Publish"}
                     </button>
                     <button
-                        onClick={() => navigate(`/products/edit/${product._id}`, { state: { product } })}
+                        onClick={() => onEdit(product)}
                         className="flex-1 py-1.5 rounded-md text-xs font-semibold border border-gray-300 text-gray-700 hover:bg-gray-50"
                     >
                         Edit
                     </button>
                     <button
-                        onClick={() => onDelete(product._id)}
+                        onClick={() => setShowDeleteModal(true)}
                         className="p-1.5 rounded-md border border-gray-300 text-gray-500 hover:bg-red-50 hover:text-red-500 hover:border-red-300"
                     >
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -82,6 +81,37 @@ const ProductCard = ({ product, onDelete, onTogglePublish }) => {
                     </button>
                 </div>
             </div>
+
+            {/* Delete Confirmation Modal */}
+            {showDeleteModal && (
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl w-full max-w-sm mx-4 p-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-base font-semibold text-gray-900">Delete Product</h2>
+                            <button onClick={() => setShowDeleteModal(false)} className="text-gray-400 hover:text-gray-600 text-xl leading-none">✕</button>
+                        </div>
+                        <p className="text-sm text-gray-500 mb-6">
+                            Are you sure you really want to delete this Product{" "}
+                            <span className="font-semibold text-gray-800">"{product.productName}"</span> ?
+                        </p>
+                        <div className="flex justify-end gap-3">
+                            <button
+                                onClick={() => setShowDeleteModal(false)}
+                                className="px-4 py-2 rounded-md text-sm text-gray-600 border border-gray-300 hover:bg-gray-50"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => { onDelete(product._id); setShowDeleteModal(false); }}
+                                className="px-4 py-2 rounded-md text-white text-sm font-semibold"
+                                style={{ background: "#002283" }}
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

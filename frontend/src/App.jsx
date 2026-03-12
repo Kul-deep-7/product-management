@@ -6,6 +6,7 @@ import Products from "./pages/Products";
 import DisplayProducts from "./pages/DisplayProducts";
 
 
+
 const App = () => {
   return (
     <Routes>
@@ -14,7 +15,6 @@ const App = () => {
       <Route path="/home" element={<Home />} />
       <Route path="/products" element={<DisplayProducts />} />
       <Route path="/products/add" element={<Products />} />
-
     </Routes>
   );
 };

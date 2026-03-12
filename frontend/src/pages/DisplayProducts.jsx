@@ -11,7 +11,11 @@ const DisplayProducts = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [toast, setToast] = useState("");
-    const [showModal, setShowModal] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [editLoading, setEditLoading] = useState(false);
+    const [editError, setEditError] = useState("");
     const navigate = useNavigate();
 
     const fetchProducts = async () => {
@@ -70,15 +74,45 @@ const DisplayProducts = () => {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
-            setShowModal(false);
-            await fetchProducts();
+            setShowAddModal(false);
             setError("");
+            await fetchProducts();
             setToast("Product added successfully");
             setTimeout(() => setToast(""), 3000);
         } catch (err) {
             setError(err.response?.data?.message || "Something went wrong");
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleUpdate = async (form, imageFile) => {
+        if (!form.productName || !form.productType || !form.mrp || !form.sellingPrice || !form.brandName) {
+            setEditError("Please fill all required fields");
+            return;
+        }
+        setEditError("");
+        setEditLoading(true);
+        try {
+            const formData = new FormData();
+            Object.entries(form).forEach(([key, val]) => formData.append(key, val));
+            imageFile.forEach((file) => formData.append("images", file));
+
+            await axios.put(`${API_URL}/product/update/${selectedProduct._id}`, formData, {
+                withCredentials: true,
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            setShowEditModal(false);
+            setSelectedProduct(null);
+            setEditError("");
+            await fetchProducts();
+            setToast("Product updated successfully");
+            setTimeout(() => setToast(""), 3000);
+        } catch (err) {
+            setEditError(err.response?.data?.message || "Something went wrong");
+        } finally {
+            setEditLoading(false);
         }
     };
 
@@ -103,7 +137,6 @@ const DisplayProducts = () => {
                 </div>
             </div>
 
-            {/* Main */}
             <div className="flex-1 flex flex-col overflow-hidden">
 
                 {/* Top Bar */}
@@ -116,7 +149,7 @@ const DisplayProducts = () => {
                             </svg>
                             <input type="text" placeholder="Search Services, Products" className="text-xs outline-none text-gray-500 w-40" />
                         </div>
-                        <button onClick={() => setShowModal(true)} className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-blue-700">
+                        <button onClick={() => { setShowAddModal(true); setError(""); }} className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-blue-700">
                             + Add Products
                         </button>
                         <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm cursor-pointer">👤</div>
@@ -138,7 +171,7 @@ const DisplayProducts = () => {
                                 you can add products to store anytime
                             </p>
                             <button
-                                onClick={() => setShowModal(true)}
+                                onClick={() => setShowAddModal(true)}
                                 className="mt-2 px-6 py-2 rounded-md text-white text-sm font-semibold"
                                 style={{ background: "#002283" }}
                             >
@@ -153,7 +186,7 @@ const DisplayProducts = () => {
                                     product={product}
                                     onDelete={handleDelete}
                                     onTogglePublish={handleTogglePublish}
-                                    onEdit={(product) => navigate(`/products/edit/${product._id}`, { state: { product } })}
+                                    onEdit={(p) => { setSelectedProduct(p); setEditError(""); setShowEditModal(true); }}
                                 />
                             ))}
                         </div>
@@ -161,20 +194,38 @@ const DisplayProducts = () => {
                 </div>
             </div>
 
-            {/* Modal */}
-            {showModal && (
+            {/* Add Modal */}
+            {showAddModal && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                     <div className="bg-white rounded-xl w-full max-w-md mx-4 p-6 relative max-h-[90vh] overflow-y-auto">
                         <div className="flex items-center justify-between mb-5">
                             <h2 className="text-base font-semibold text-gray-900">Add Product</h2>
-                            <button onClick={() => { setShowModal(false); setError(""); }} className="text-gray-400 hover:text-gray-600 text-xl leading-none">✕</button>
+                            <button onClick={() => { setShowAddModal(false); setError(""); }} className="text-gray-400 hover:text-gray-600 text-xl leading-none">✕</button>
                         </div>
-                        {/* ✅ ProductForm replaces all the form fields */}
                         <ProductForm
                             onSubmit={handleCreate}
                             buttonText="Create"
                             loading={loading}
                             error={error}
+                        />
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Modal */}
+            {showEditModal && selectedProduct && (
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl w-full max-w-md mx-4 p-6 relative max-h-[90vh] overflow-y-auto">
+                        <div className="flex items-center justify-between mb-5">
+                            <h2 className="text-base font-semibold text-gray-900">Edit Product</h2>
+                            <button onClick={() => { setShowEditModal(false); setSelectedProduct(null); setEditError(""); }} className="text-gray-400 hover:text-gray-600 text-xl leading-none">✕</button>
+                        </div>
+                        <ProductForm
+                            initialData={selectedProduct}
+                            onSubmit={handleUpdate}
+                            buttonText="Update"
+                            loading={editLoading}
+                            error={editError}
                         />
                     </div>
                 </div>

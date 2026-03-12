@@ -2,12 +2,18 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ProductCard from "./ProductCard";
+import ProductForm from "./ProductForm";
+
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const Home = () => {
     const [activeTab, setActiveTab] = useState("published");
     const [products, setProducts] = useState([]);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [editLoading, setEditLoading] = useState(false);
+    const [editError, setEditError] = useState("");
     const navigate = useNavigate();
 
     const fetchProducts = async () => {
@@ -19,9 +25,7 @@ const Home = () => {
         }
     };
 
-    useEffect(() => {
-        fetchProducts();
-    }, []);
+    useEffect(() => { fetchProducts(); }, []);
 
     const handleDelete = async (id) => {
         try {
@@ -40,6 +44,34 @@ const Home = () => {
             );
         } catch (err) {
             console.log(err);
+        }
+    };
+
+    const handleUpdate = async (form, imageFile) => {
+        if (!form.productName || !form.productType || !form.mrp || !form.sellingPrice || !form.brandName) {
+            setEditError("Please fill all required fields");
+            return;
+        }
+        setEditError("");
+        setEditLoading(true);
+        try {
+            const formData = new FormData();
+            Object.entries(form).forEach(([key, val]) => formData.append(key, val));
+            imageFile.forEach((file) => formData.append("images", file));
+
+            await axios.put(`${API_URL}/product/update/${selectedProduct._id}`, formData, {
+                withCredentials: true,
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            setShowEditModal(false);
+            setSelectedProduct(null);
+            setEditError("");
+            await fetchProducts();
+        } catch (err) {
+            setEditError(err.response?.data?.message || "Something went wrong");
+        } finally {
+            setEditLoading(false);
         }
     };
 
@@ -114,13 +146,32 @@ const Home = () => {
                                     product={product}
                                     onDelete={handleDelete}
                                     onTogglePublish={handleTogglePublish}
-                                    onEdit={(product) => navigate(`/products/edit/${product._id}`, { state: { product } })}
+                                    onEdit={(p) => { setSelectedProduct(p); setEditError(""); setShowEditModal(true); }}
                                 />
                             ))}
                         </div>
                     )}
                 </div>
             </div>
+
+            {/* Edit Modal */}
+            {showEditModal && selectedProduct && (
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl w-full max-w-md mx-4 p-6 relative max-h-[90vh] overflow-y-auto">
+                        <div className="flex items-center justify-between mb-5">
+                            <h2 className="text-base font-semibold text-gray-900">Edit Product</h2>
+                            <button onClick={() => { setShowEditModal(false); setSelectedProduct(null); setEditError(""); }} className="text-gray-400 hover:text-gray-600 text-xl leading-none">✕</button>
+                        </div>
+                        <ProductForm
+                            initialData={selectedProduct}
+                            onSubmit={handleUpdate}
+                            buttonText="Update"
+                            loading={editLoading}
+                            error={editError}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
